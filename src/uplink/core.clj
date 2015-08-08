@@ -28,7 +28,7 @@
       (when (and
              (zero? exit)
              (not= "~" (subs out 0 1)))
-        (string/trim out)))))
+        (-> out string/trim io/file)))))
 
 (comment
 
