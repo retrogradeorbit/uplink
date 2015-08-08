@@ -35,9 +35,28 @@
                  (Session/getDefaultInstance (Properties.))
                  (io/input-stream (.getBytes message))))
 
-  (def mdir (io/file maildir))
+  ;; headers
+  (-> mime-msg .getAllHeaderLines enumeration-seq)
+
+  (-> mime-msg .getAllRecipients)
+  (def from (-> mime-msg .getFrom (aget 0)))
+  (-> mime-msg .getReplyTo)
+  (-> mime-msg .getSender)
+  (-> mime-msg .getSize)
+
+  ;; subject returns string
+  (-> mime-msg .getSubject)
+
+  (-> mime-msg .getLineCount)
+  (-> mime-msg .getMessageID)
+
+  ;; the from address details
+  (-> from .getType)
+  (-> from .toString)
+
+  ;; body
+  (-> mime-msg .getContentType)
+  (-> mime-msg .getInputStream)
 
 
-
-
-  )
+  (def mdir (io/file maildir)))
