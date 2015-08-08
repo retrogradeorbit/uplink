@@ -30,7 +30,7 @@
   (println (slurp (-> md-cur .listFiles (aget 10))))
 
   ;; parse the mail
-  (def message (slurp (-> md-cur .listFiles (aget 100))))
+  (def message (slurp (-> md-cur .listFiles (aget 10))))
   (def mime-msg (MimeMessage.
                  (Session/getDefaultInstance (Properties.))
                  (io/input-stream (.getBytes message))))
@@ -58,5 +58,10 @@
   (-> mime-msg .getContentType)
   (-> mime-msg .getInputStream)
 
+  (def content (-> mime-msg .getContent))
 
-  (def mdir (io/file maildir)))
+  ;; number of body parts
+  (def num (-> content .getCount))
+
+  (map #(-> content (.getBodyPart %) .getContent)
+       (range num)))
