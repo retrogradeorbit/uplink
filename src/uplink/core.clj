@@ -1,6 +1,9 @@
 (ns uplink.core
   (:require [clojure.java.io :as io]
             [clojure.string :as string])
+  (:import [javax.mail Session]
+           [javax.mail.internet MimeMessage]
+           [java.util Properties])
   (:gen-class))
 
 (defn -main
