@@ -1,5 +1,6 @@
 (ns uplink.core
   (:require [clojure.java.io :as io]
+            [clojure.java.shell :refer [sh]]
             [clojure.string :as string])
   (:import [javax.mail Session]
            [javax.mail.internet MimeMessage]
@@ -11,6 +12,23 @@
   [& args]
   (println "Hello, World!"))
 
+(def invalid-username-regexp #"[^A-Za-z0-9\-\._]+")
+
+(defn get-users-homedir
+  "return the home directory for the passed in user. Invalid users,
+  returns nil. If the shell call fails (it will on Windows), returns
+  nil"
+  [username]
+  (when-not
+      (re-find invalid-username-regexp username)
+    (let [{:keys [out exit]}
+          (->> username
+               (str "echo ~")
+               (sh "sh" "-c"))]
+      (when (and
+             (zero? exit)
+             (not= "~" (subs out 0 1)))
+        (string/trim out)))))
 
 (comment
 
@@ -64,4 +82,8 @@
   (def num (-> content .getCount))
 
   (map #(-> content (.getBodyPart %) .getContent)
-       (range num)))
+       (range num))
+
+
+
+)
